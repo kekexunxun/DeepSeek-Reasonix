@@ -1972,6 +1972,10 @@ func globalWorkspaceRoot() string {
 func ensureGlobalWorkspaceRoot() (string, error) {
 	root := globalWorkspaceRoot()
 	if err := os.MkdirAll(root, 0o755); err != nil {
+		fallback := filepath.Join(os.TempDir(), "reasonix-global-workspace")
+		if err2 := os.MkdirAll(fallback, 0o755); err2 == nil {
+			return fallback, nil
+		}
 		return "", err
 	}
 	return root, nil
